@@ -11,6 +11,7 @@ To run directly, simply execute the binary with the required and optional flags:
 * -api: the hostname of the PKS API
 * -cluster: name of the k8s cluster
 * -user: OIDC username
+* -password: (optional) OIDC user password
 * -ns: which namespace should be configured
 * -kubeconfig (optional): write to a specific file rather than default kubeconfig 
 
@@ -69,3 +70,8 @@ Your can also compile to binaries as
 $ go build -o kubectl-pkstoken  main.go kubenetes.go
 ```
 
+Cross compile with GO (working on OSX):
+```
+GOOS=linux GOARCH=amd64 go build -o kubectl-pkstoken.linux.amd64 main.go kubernetes.go
+GOOS=windows GOARCH=amd64 go build -o kubectl-pkstoken.windows.amd64 main.go kubernetes.go
+```
