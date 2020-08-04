@@ -65,8 +65,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	//fmt.Println(password)
-	//os.Exit(0)
+	var hasPassword = password != ""
 
 	if KUBECONFIG != "" {
 		err := usefile(KUBECONFIG)
@@ -94,18 +93,19 @@ func main() {
 	}
 
 	// Read password
-	var hasPassword = password != ""
-	if !hasPassword || terminal.IsTerminal(int(os.Stdout.Fd())) {
-		fmt.Printf("Password for user %s: ", USER)
-		bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
-		password = string(bytePassword)
+	if !hasPassword {
+		if terminal.IsTerminal(int(os.Stdout.Fd())) {
+			fmt.Printf("Password for user %s: ", USER)
+			bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
+			password = string(bytePassword)
 
-		if err != nil {
-			log.Fatalf("Error reading password %s", err.Error())
-			os.Exit(-1)
+			if err != nil {
+				log.Fatalf("Error reading password %s", err.Error())
+				os.Exit(-1)
+			}
+		} else {
+			log.Fatalf("Not running in a TTY. Unable to prompt for password nor password provided in command-line arguments")
 		}
-	} else {
-		log.Fatalf("Not running in a TTY. Unable to prompt for password nor password provided in command-line arguments")
 	}
 
 	//log.Printf("PWD: %s", password)
