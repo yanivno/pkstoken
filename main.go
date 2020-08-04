@@ -53,6 +53,7 @@ func main() {
 	flag.StringVar(&CLUSTER, "cluster", "", "Kubernetes cluster master")
 	flag.StringVar(&USER, "user", "", "LDAP username to connect to the cluster")
 	flag.StringVar(&NS, "ns", "default", "namespece associated with this user")
+	flag.StringVar(&password, "password", "", "user password to connect with")
 	flag.StringVar(&KUBECONFIG, "kubeconfig", "", "Operate on a non default kubeconfig")
 	flag.BoolVar(&INSECURE_SSL, "insecure-ssl", true, "Accept/Ignore all server SSL certificates")
 	flag.Parse()
@@ -63,6 +64,9 @@ func main() {
 		fmt.Println("Copyright 2019 Pivotal")
 		os.Exit(0)
 	}
+
+	//fmt.Println(password)
+	//os.Exit(0)
 
 	if KUBECONFIG != "" {
 		err := usefile(KUBECONFIG)
@@ -90,7 +94,8 @@ func main() {
 	}
 
 	// Read password
-	if terminal.IsTerminal(int(os.Stdout.Fd())) {
+	var hasPassword = password != ""
+	if !hasPassword || terminal.IsTerminal(int(os.Stdout.Fd())) {
 		fmt.Printf("Password for user %s: ", USER)
 		bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
 		password = string(bytePassword)
@@ -100,7 +105,7 @@ func main() {
 			os.Exit(-1)
 		}
 	} else {
-		log.Fatalf("Not running in a TTY. Unable to prompt for password")
+		log.Fatalf("Not running in a TTY. Unable to prompt for password nor password provided in command-line arguments")
 	}
 
 	//log.Printf("PWD: %s", password)
