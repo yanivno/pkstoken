@@ -74,4 +74,5 @@ Cross compile with GO (working on OSX):
 ```
 GOOS=linux GOARCH=amd64 go build -o kubectl-pkstoken.linux.amd64 main.go kubernetes.go
 GOOS=windows GOARCH=amd64 go build -o kubectl-pkstoken.windows.amd64 main.go kubernetes.go
+GOOS=darwin GOARCH=amd64 go build -o kubectl-pkstoken.darwin.amd64 main.go kubernetes.go
 ```
